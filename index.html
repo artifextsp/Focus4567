@@ -14,23 +14,35 @@
         body {
             font-family: 'Arial', sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
+            height: 100vh;
+            width: 100vw;
             display: flex;
             justify-content: center;
             align-items: center;
-            overflow-x: hidden;
+            overflow: hidden;
             user-select: none;
+        }
+
+        /* ESTILO FULLSCREEN MEJORADO */
+        body.fullscreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 9999;
         }
 
         .game-container {
             background: white;
             border-radius: 20px;
             box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-            width: 95%;
-            max-width: 900px;
-            min-height: 600px;
+            width: 98vw;
+            height: 95vh;
             position: relative;
             overflow: hidden;
+            display: flex;
+            flex-direction: column;
         }
 
         .game-header {
@@ -41,6 +53,7 @@
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
+            min-height: 80px;
         }
 
         .timer-container {
@@ -51,9 +64,9 @@
 
         .timer-bar {
             width: 100%;
-            height: 20px;
+            height: 24px;
             background: rgba(255,255,255,0.3);
-            border-radius: 10px;
+            border-radius: 12px;
             overflow: hidden;
             position: relative;
         }
@@ -61,7 +74,7 @@
         .timer-progress {
             height: 100%;
             background: linear-gradient(90deg, #fff, #f0f0f0);
-            border-radius: 10px;
+            border-radius: 12px;
             transition: width 0.1s linear;
             box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
         }
@@ -71,7 +84,7 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            font-size: 12px;
+            font-size: 14px;
             font-weight: bold;
             color: #333;
         }
@@ -80,7 +93,7 @@
             display: flex;
             gap: 15px;
             font-weight: bold;
-            font-size: 13px;
+            font-size: 14px;
             flex-wrap: wrap;
         }
 
@@ -90,8 +103,8 @@
 
         .countdown-progress {
             background: rgba(255, 255, 255, 0.2);
-            padding: 8px 12px;
-            border-radius: 20px;
+            padding: 10px 15px;
+            border-radius: 25px;
             border: 2px solid rgba(255, 255, 255, 0.3);
             transition: all 0.3s ease;
         }
@@ -109,12 +122,12 @@
         }
 
         .countdown-label {
-            font-size: 11px;
+            font-size: 12px;
             opacity: 0.9;
         }
 
         .countdown-value {
-            font-size: 16px;
+            font-size: 18px;
             font-weight: bold;
             margin-left: 5px;
             color: #fff;
@@ -135,32 +148,34 @@
         .game-area {
             display: grid;
             grid-template-columns: 1fr 2fr 1fr;
-            gap: 20px;
-            padding: 40px 20px;
-            min-height: 400px;
+            gap: 30px;
+            padding: 40px 30px;
+            flex: 1;
             align-items: center;
+            position: relative;
         }
 
         .category-zone {
             background: #f8f9fa;
-            border: 3px solid #dee2e6;
-            border-radius: 15px;
-            min-height: 150px;
+            border: 4px solid #dee2e6;
+            border-radius: 20px;
+            min-height: 200px;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            font-size: 24px;
+            font-size: 32px;
             font-weight: bold;
             color: #495057;
             transition: all 0.3s ease;
             position: relative;
         }
 
-        .category-zone.drag-over {
+        .category-zone.active {
             border-color: #007bff;
             background: #e3f2fd;
             transform: scale(1.05);
+            box-shadow: 0 8px 25px rgba(0,123,255,0.3);
         }
 
         .category-zone.correct {
@@ -187,33 +202,29 @@
         }
 
         .number-element {
-            width: 120px;
-            height: 120px;
+            width: 150px;
+            height: 150px;
             background: linear-gradient(145deg, #667eea, #764ba2);
             color: white;
-            font-size: 48px;
+            font-size: 64px;
             font-weight: bold;
-            border-radius: 20px;
+            border-radius: 25px;
             display: flex;
             justify-content: center;
             align-items: center;
-            cursor: grab;
-            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
             transition: all 0.3s ease;
             position: relative;
             z-index: 10;
         }
 
-        .number-element:hover {
-            transform: scale(1.1);
-            box-shadow: 0 12px 24px rgba(0,0,0,0.3);
+        .number-element.pulse {
+            animation: numberPulse 0.6s ease;
         }
 
-        .number-element.dragging {
-            cursor: grabbing;
-            transform: scale(1.2) rotate(5deg);
-            z-index: 1000;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+        @keyframes numberPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
         }
 
         .feedback {
@@ -221,7 +232,7 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            font-size: 36px;
+            font-size: 48px;
             font-weight: bold;
             pointer-events: none;
             z-index: 1001;
@@ -231,12 +242,90 @@
             animation: feedbackFloat 1s ease-out;
         }
 
+        /* NUEVO: NOTIFICACIÓN DE CAMBIO */
+        .change-notification {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            color: white;
+            padding: 30px 60px;
+            border-radius: 25px;
+            font-size: 48px;
+            font-weight: bold;
+            z-index: 1500;
+            box-shadow: 0 15px 35px rgba(238, 90, 36, 0.4);
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            display: none;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .change-notification.show {
+            display: block;
+            animation: changeAlert 2s ease-out;
+        }
+
+        @keyframes changeAlert {
+            0% { 
+                opacity: 0; 
+                transform: translate(-50%, -50%) scale(0.5); 
+            }
+            20% { 
+                opacity: 1; 
+                transform: translate(-50%, -50%) scale(1.2); 
+            }
+            40% { 
+                transform: translate(-50%, -50%) scale(1); 
+            }
+            80% { 
+                opacity: 1; 
+                transform: translate(-50%, -50%) scale(1); 
+            }
+            100% { 
+                opacity: 0; 
+                transform: translate(-50%, -50%) scale(0.8); 
+            }
+        }
+
         .game-controls {
             display: flex;
-            justify-content: center;
-            gap: 15px;
-            padding: 20px;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            padding: 20px 40px;
             background: #f8f9fa;
+            border-top: 2px solid #dee2e6;
+        }
+
+        .keyboard-controls {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .key-instruction {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: #fff;
+            padding: 10px 15px;
+            border-radius: 15px;
+            border: 2px solid #dee2e6;
+            font-weight: bold;
+            color: #495057;
+        }
+
+        .key-visual {
+            background: linear-gradient(145deg, #e9ecef, #dee2e6);
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 16px;
+            font-weight: bold;
+            color: #495057;
+            border: 2px solid #adb5bd;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.1);
         }
 
         .btn {
@@ -264,14 +353,19 @@
             color: white;
         }
 
-        /* MEJORAS EN LOS MODALES - TAMAÑO OPTIMIZADO */
+        .btn-fullscreen {
+            background: linear-gradient(145deg, #6f42c1, #5a32a3);
+            color: white;
+        }
+
+        /* MODALES MEJORADOS */
         .modal {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.7);
+            background: rgba(0,0,0,0.8);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -287,9 +381,9 @@
         .modal-content {
             background: white;
             border-radius: 20px;
-            padding: 25px;
+            padding: 30px;
             text-align: center;
-            max-width: 450px;
+            max-width: 500px;
             width: 95%;
             box-shadow: 0 20px 40px rgba(0,0,0,0.3);
             max-height: 95vh;
@@ -298,11 +392,81 @@
         }
 
         .welcome-content {
-            max-width: 650px;
+            max-width: 700px;
             width: 95%;
-            padding: 20px;
+            padding: 25px;
             max-height: 90vh;
             overflow-y: auto;
+        }
+
+        /* NUEVO: MODAL DE "LISTOS" */
+        .ready-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2500;
+        }
+
+        .ready-modal.hidden {
+            display: none !important;
+        }
+
+        .ready-content {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 50px;
+            border-radius: 30px;
+            text-align: center;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+            border: 4px solid rgba(255,255,255,0.2);
+        }
+
+        .ready-content h2 {
+            font-size: 36px;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .ready-content p {
+            font-size: 18px;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+
+        .level-info-display {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 15px;
+            margin: 20px 0;
+        }
+
+        .level-info-display h3 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .ready-btn {
+            background: linear-gradient(145deg, #28a745, #1e7e34);
+            color: white;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 30px;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        }
+
+        .ready-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(40, 167, 69, 0.4);
         }
 
         .welcome-layout {
@@ -316,14 +480,34 @@
         .instructions-column h3, .credits-column h3 {
             color: #007bff;
             margin-bottom: 12px;
-            font-size: 16px;
+            font-size: 18px;
             text-align: center;
         }
 
         .instructions-column p {
-            margin-bottom: 10px;
-            line-height: 1.4;
+            margin-bottom: 12px;
+            line-height: 1.5;
+            font-size: 14px;
+        }
+
+        .keyboard-info {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+            border-left: 4px solid #2196f3;
+        }
+
+        .keyboard-info h4 {
+            color: #1976d2;
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+
+        .keyboard-info p {
+            color: #424242;
             font-size: 13px;
+            margin: 5px 0;
         }
 
         .skills-list {
@@ -334,16 +518,16 @@
 
         .skills-list li {
             background: linear-gradient(135deg, #e3f2fd, #f3e5f5);
-            margin-bottom: 5px;
-            padding: 5px 10px;
+            margin-bottom: 6px;
+            padding: 8px 12px;
             border-radius: 15px;
-            font-size: 11px;
+            font-size: 12px;
             border-left: 3px solid #007bff;
         }
 
         .designer-credits {
             background: #f8f9fa;
-            padding: 10px;
+            padding: 12px;
             border-radius: 10px;
             text-align: center;
             border: 2px solid #dee2e6;
@@ -352,59 +536,59 @@
         .designer-credits p {
             margin: 0;
             color: #495057;
-            font-size: 11px;
+            font-size: 12px;
         }
 
         .designer-name {
             color: #007bff;
             font-weight: bold;
-            font-size: 13px;
+            font-size: 14px;
         }
 
         #startGameBtn {
-            margin-top: 12px;
+            margin-top: 15px;
             width: 100%;
-            padding: 10px;
+            padding: 12px;
         }
 
-        /* ESTILOS OPTIMIZADOS PARA MODAL DE NIVEL COMPLETADO */
+        /* ESTILOS PARA MODALES DE NIVEL */
         .level-achievement {
             background: linear-gradient(135deg, #f8f9fa, #e9ecef);
-            border-radius: 12px;
-            padding: 15px;
-            margin: 15px 0;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
         }
 
         .level-achievement h3 {
-            margin: 0 0 12px 0;
+            margin: 0 0 15px 0;
             color: #495057;
-            font-size: 16px;
+            font-size: 18px;
         }
 
         .achievement-display {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 15px;
+            gap: 20px;
             align-items: center;
         }
 
         .level-badge {
             background: linear-gradient(135deg, #667eea, #764ba2);
             color: white;
-            padding: 15px;
-            border-radius: 12px;
+            padding: 20px;
+            border-radius: 15px;
             text-align: center;
         }
 
         .level-badge .level-number {
-            font-size: 28px;
+            font-size: 32px;
             font-weight: bold;
             line-height: 1;
         }
 
         .level-badge .level-name {
-            font-size: 13px;
-            margin-top: 4px;
+            font-size: 14px;
+            margin-top: 5px;
             opacity: 0.9;
         }
 
@@ -413,23 +597,23 @@
         }
 
         .score-label {
-            font-size: 12px;
+            font-size: 14px;
             color: #6c757d;
-            margin-bottom: 4px;
+            margin-bottom: 5px;
         }
 
         .score-value {
-            font-size: 32px;
+            font-size: 36px;
             font-weight: bold;
             color: #007bff;
             line-height: 1;
         }
 
         .bonus-info {
-            font-size: 10px;
+            font-size: 12px;
             color: #28a745;
             font-weight: bold;
-            margin-top: 4px;
+            margin-top: 5px;
         }
 
         .bonus-info.perfect {
@@ -445,144 +629,143 @@
         .next-level-preview {
             background: linear-gradient(135deg, #17a2b8, #6f42c1);
             color: white;
-            padding: 12px;
-            border-radius: 8px;
-            margin: 15px 0;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
             text-align: center;
         }
 
         .next-level-preview h4 {
-            margin: 0 0 8px 0;
-            font-size: 14px;
+            margin: 0 0 10px 0;
+            font-size: 16px;
         }
 
         .next-level-preview p {
             margin: 0;
-            font-size: 16px;
+            font-size: 18px;
         }
 
         .progress-stats {
             display: grid;
             grid-template-columns: 1fr 1fr 1fr;
-            gap: 10px;
-            margin: 15px 0;
+            gap: 15px;
+            margin: 20px 0;
         }
 
         .stat-item {
             background: #f8f9fa;
-            padding: 10px;
-            border-radius: 8px;
+            padding: 15px;
+            border-radius: 10px;
             text-align: center;
         }
 
         .stat-value {
-            font-size: 18px;
+            font-size: 20px;
             font-weight: bold;
             color: #007bff;
         }
 
         .stat-label {
-            font-size: 10px;
+            font-size: 12px;
             color: #666;
-            margin-top: 3px;
+            margin-top: 5px;
         }
 
-        /* ESTILOS MEJORADOS PARA GAME OVER - MÁS COMPACTO */
+        /* ESTILOS PARA GAME OVER */
         .level-achieved {
             background: linear-gradient(135deg, #17a2b8, #138496);
             color: white;
-            padding: 12px;
-            border-radius: 10px;
-            margin: 12px 0;
+            padding: 15px;
+            border-radius: 12px;
+            margin: 15px 0;
             text-align: center;
         }
 
         .level-achieved h3 {
-            margin: 0 0 8px 0;
-            font-size: 14px;
+            margin: 0 0 10px 0;
+            font-size: 16px;
         }
 
         .achieved-badge {
             background: rgba(255,255,255,0.2);
-            padding: 10px;
-            border-radius: 8px;
-            margin: 8px 0;
+            padding: 12px;
+            border-radius: 10px;
+            margin: 10px 0;
         }
 
         .achieved-level-number {
-            font-size: 24px;
+            font-size: 28px;
             font-weight: bold;
             line-height: 1;
         }
 
         .achieved-level-name {
-            font-size: 12px;
-            margin-top: 3px;
+            font-size: 14px;
+            margin-top: 5px;
             opacity: 0.9;
         }
 
         .tutor-message {
             background: #fff3cd;
             border: 2px solid #ffeaa7;
-            border-radius: 10px;
-            padding: 12px;
-            margin: 12px 0;
+            border-radius: 12px;
+            padding: 15px;
+            margin: 15px 0;
             text-align: center;
         }
 
         .tutor-message h4 {
             color: #856404;
-            margin: 0 0 6px 0;
-            font-size: 14px;
+            margin: 0 0 8px 0;
+            font-size: 16px;
         }
 
         .tutor-message p {
             color: #856404;
             margin: 0;
-            font-size: 12px;
+            font-size: 14px;
             font-weight: bold;
         }
 
         .final-score-display {
             background: linear-gradient(135deg, #28a745, #20c997);
             color: white;
-            padding: 12px;
-            border-radius: 10px;
-            margin: 12px 0;
+            padding: 15px;
+            border-radius: 12px;
+            margin: 15px 0;
             text-align: center;
         }
 
         .final-score-value {
-            font-size: 28px;
+            font-size: 32px;
             font-weight: bold;
             line-height: 1;
         }
 
         .final-score-label {
-            font-size: 12px;
-            margin-top: 4px;
+            font-size: 14px;
+            margin-top: 5px;
             opacity: 0.9;
         }
 
-        /* ALERTA DE RESET - NUEVO ESTILO */
         .reset-warning {
             background: linear-gradient(135deg, #dc3545, #c82333);
             color: white;
-            padding: 12px;
-            border-radius: 10px;
-            margin: 12px 0;
+            padding: 15px;
+            border-radius: 12px;
+            margin: 15px 0;
             text-align: center;
             animation: urgentPulse 1.5s infinite;
         }
 
         .reset-warning h4 {
-            margin: 0 0 6px 0;
-            font-size: 14px;
+            margin: 0 0 8px 0;
+            font-size: 16px;
         }
 
         .reset-warning p {
             margin: 0;
-            font-size: 12px;
+            font-size: 14px;
         }
 
         @keyframes urgentPulse {
@@ -592,32 +775,32 @@
 
         .modal h2 {
             color: #333;
-            margin-bottom: 15px;
-            font-size: 24px;
+            margin-bottom: 20px;
+            font-size: 28px;
         }
 
         .modal p {
             color: #666;
             margin-bottom: 15px;
-            font-size: 14px;
+            font-size: 16px;
             line-height: 1.5;
         }
 
         .credits {
-            margin-top: 20px;
-            padding-top: 15px;
+            margin-top: 25px;
+            padding-top: 20px;
             border-top: 1px solid #e9ecef;
             text-align: center;
             color: #6c757d;
         }
 
         .credits p {
-            margin-bottom: 4px;
-            font-size: 12px;
+            margin-bottom: 5px;
+            font-size: 14px;
         }
 
         .credits small {
-            font-size: 10px;
+            font-size: 12px;
             color: #007bff;
         }
 
@@ -635,7 +818,7 @@
 
         @keyframes swapGlow {
             0%, 100% { box-shadow: 0 0 0 rgba(255, 193, 7, 0); }
-            50% { box-shadow: 0 0 20px rgba(255, 193, 7, 0.8); }
+            50% { box-shadow: 0 0 30px rgba(255, 193, 7, 0.8); }
         }
 
         @keyframes feedbackFloat {
@@ -650,26 +833,26 @@
 
         .sparkle {
             position: absolute;
-            width: 20px;
-            height: 20px;
+            width: 25px;
+            height: 25px;
             background: #ffd700;
             border-radius: 50%;
             pointer-events: none;
             animation: sparkle 1s ease-out;
         }
 
-        /* Responsive Design Mejorado */
+        /* Responsive Design */
         @media (max-width: 768px) {
             .game-area {
                 grid-template-columns: 1fr;
                 grid-template-rows: auto auto auto;
-                gap: 30px;
+                gap: 20px;
                 padding: 20px 15px;
             }
 
             .category-zone {
-                min-height: 100px;
-                font-size: 20px;
+                min-height: 120px;
+                font-size: 24px;
                 order: 1;
             }
 
@@ -683,147 +866,145 @@
             }
 
             .number-element {
-                width: 100px;
-                height: 100px;
-                font-size: 36px;
+                width: 120px;
+                height: 120px;
+                font-size: 48px;
             }
 
             .score-info {
                 font-size: 12px;
-                gap: 10px;
+                gap: 8px;
             }
 
             .timer-container {
-                margin: 10px 0;
+                margin: 8px 0;
                 min-width: auto;
             }
 
             .countdown-progress {
-                padding: 6px 10px;
-            }
-
-            .welcome-layout {
-                grid-template-columns: 1fr;
-                gap: 20px;
-            }
-
-            .modal-content {
-                max-width: 380px;
-                padding: 20px;
-            }
-
-            .welcome-content {
-                max-width: 380px;
-                padding: 15px;
-            }
-
-            .achievement-display {
-                grid-template-columns: 1fr;
-                gap: 12px;
-            }
-
-            .progress-stats {
-                grid-template-columns: 1fr;
-                gap: 8px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .game-container {
-                width: 100%;
-                margin: 10px;
-                border-radius: 15px;
-                min-height: auto;
-            }
-
-            .game-header {
                 padding: 8px 12px;
-                flex-direction: column;
-                gap: 8px;
-            }
-
-            .score-info {
-                font-size: 11px;
-                gap: 6px;
-                justify-content: center;
-                flex-wrap: wrap;
-            }
-
-            .countdown-progress {
-                padding: 5px 8px;
-                font-size: 10px;
-            }
-
-            .countdown-value {
-                font-size: 12px;
-            }
-
-            .number-element {
-                width: 80px;
-                height: 80px;
-                font-size: 28px;
-            }
-
-            .category-zone {
-                min-height: 80px;
-                font-size: 18px;
-                padding: 10px;
-            }
-
-            .modal-content {
-                max-width: 320px;
-                padding: 15px;
-                margin: 5px;
-            }
-
-            .welcome-content {
-                max-width: 320px;
-                padding: 15px;
-                margin: 5px;
             }
 
             .welcome-layout {
                 grid-template-columns: 1fr;
                 gap: 15px;
-                text-align: center;
             }
 
-            .skills-list li {
+            .modal-content {
+                max-width: 400px;
+                padding: 20px;
+            }
+
+            .welcome-content {
+                max-width: 400px;
+                padding: 15px;
+            }
+
+            .change-notification {
+                font-size: 32px;
+                padding: 20px 40px;
+            }
+
+            .keyboard-controls {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .ready-content {
+                padding: 30px;
+            }
+
+            .ready-content h2 {
+                font-size: 28px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .game-container {
+                width: 100vw;
+                height: 100vh;
+                border-radius: 0;
+            }
+
+            .game-header {
+                padding: 10px 15px;
+                flex-direction: column;
+                gap: 10px;
+                min-height: auto;
+            }
+
+            .score-info {
+                font-size: 11px;
+                gap: 5px;
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+
+            .countdown-progress {
+                padding: 6px 10px;
                 font-size: 10px;
-                padding: 4px 8px;
             }
 
-            .designer-credits {
-                padding: 8px;
+            .countdown-value {
+                font-size: 14px;
             }
 
-            .designer-credits p {
-                font-size: 10px;
+            .number-element {
+                width: 100px;
+                height: 100px;
+                font-size: 36px;
             }
 
-            .level-badge .level-number {
+            .category-zone {
+                min-height: 100px;
+                font-size: 20px;
+                padding: 15px;
+            }
+
+            .change-notification {
+                font-size: 24px;
+                padding: 15px 30px;
+            }
+
+            .game-controls {
+                padding: 15px 20px;
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .keyboard-controls {
+                flex-direction: row;
+                justify-content: center;
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+
+            .key-instruction {
+                padding: 8px 12px;
+                font-size: 12px;
+            }
+
+            .key-visual {
+                padding: 6px 10px;
+                font-size: 14px;
+            }
+
+            .ready-content {
+                padding: 20px;
+                margin: 10px;
+            }
+
+            .ready-content h2 {
                 font-size: 24px;
             }
 
-            .score-value {
-                font-size: 28px;
-            }
-
-            .final-score-value {
-                font-size: 28px;
-            }
-
-            .modal h2 {
-                font-size: 20px;
-            }
-
-            .progress-stats {
-                grid-template-columns: 1fr;
-                gap: 6px;
-            }
-
-            .stat-value {
+            .ready-content p {
                 font-size: 16px;
+            }
+
+            .ready-btn {
+                padding: 12px 30px;
+                font-size: 18px;
             }
         }
     </style>
@@ -860,6 +1041,10 @@
             
             <div class="element-area" id="elementArea">
                 <div class="number-element" id="currentNumber">5</div>
+                <!-- NUEVA NOTIFICACIÓN DE CAMBIO -->
+                <div class="change-notification" id="changeNotification">
+                    🔄 CAMBIO 🔄
+                </div>
             </div>
             
             <div class="category-zone" id="rightCategory" data-category="impar">
@@ -867,16 +1052,29 @@
             </div>
         </div>
 
-        <!-- Controles del juego -->
+        <!-- Controles del juego mejorados -->
         <div class="game-controls">
-            <button class="btn btn-primary" id="hintBtn">💡 Pista</button>
+            <div class="keyboard-controls">
+                <div class="key-instruction">
+                    <div class="key-visual">←</div>
+                    <span>Izquierda</span>
+                </div>
+                <div class="key-instruction">
+                    <div class="key-visual">→</div>
+                    <span>Derecha</span>
+                </div>
+            </div>
+            <div>
+                <button class="btn btn-primary" id="hintBtn">💡 Pista</button>
+                <button class="btn btn-fullscreen" id="fullscreenBtn">🔲 Pantalla Completa</button>
+            </div>
         </div>
 
         <!-- Área de feedback -->
         <div id="feedbackArea"></div>
     </div>
 
-    <!-- Modal de bienvenida -->
+    <!-- Modal de bienvenida MEJORADO -->
     <div class="modal" id="welcomeModal">
         <div class="modal-content welcome-content">
             <h2>🎯 Focus Challenge</h2>
@@ -884,19 +1082,27 @@
             <div class="welcome-layout">
                 <div class="instructions-column">
                     <h3>🎮 Cómo Jugar</h3>
-                    <p><strong>Objetivo:</strong> Arrastra cada número a la categoría correcta (PAR o IMPAR).</p>
-                    <p><strong>⚠️ ¡Atención!</strong> Las categorías pueden intercambiarse.</p>
+                    <p><strong>Objetivo:</strong> Clasifica cada número como PAR o IMPAR usando las teclas.</p>
+                    
+                    <div class="keyboard-info">
+                        <h4>⌨️ Controles</h4>
+                        <p><strong>← Flecha Izquierda:</strong> Categoría izquierda</p>
+                        <p><strong>→ Flecha Derecha:</strong> Categoría derecha</p>
+                    </div>
+                    
+                    <p><strong>⚠️ ¡Atención!</strong> Las categorías pueden intercambiarse durante el juego.</p>
                     <button class="btn btn-success" id="startGameBtn">🚀 ¡Empezar a Jugar!</button>
                 </div>
                 
                 <div class="credits-column">
                     <h3>🧠 Habilidades que Fortalece</h3>
                     <ul class="skills-list">
-                        <li>🎯 Atención sostenida</li>
-                        <li>⚡ Concentración</li>
-                        <li>🧩 Flexibilidad mental</li>
+                        <li>🎯 Atención sostenida y selectiva</li>
+                        <li>⚡ Concentración profunda</li>
+                        <li>🧩 Flexibilidad cognitiva</li>
                         <li>⏱️ Velocidad de procesamiento</li>
                         <li>🎮 Control inhibitorio</li>
+                        <li>🧠 Función ejecutiva</li>
                     </ul>
                     
                     <div class="designer-credits">
@@ -906,6 +1112,19 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <!-- NUEVO: MODAL DE "LISTOS" -->
+    <div class="ready-modal hidden" id="readyModal">
+        <div class="ready-content">
+            <h2>🎯 ¿Estás Listo?</h2>
+            <div class="level-info-display">
+                <h3 id="readyLevelInfo">Nivel 1 - 🌟 Explorador</h3>
+                <p>Objetivo: <span id="readyObjective">12 aciertos para avanzar</span></p>
+            </div>
+            <p>Cuando te sientas preparado, presiona el botón o <strong>Enter</strong> para comenzar</p>
+            <button class="ready-btn" id="startLevelBtn">🚀 ¡INICIAR!</button>
         </div>
     </div>
 
@@ -973,9 +1192,9 @@
                 </div>
             </div>
             
-            <div style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 20px; border-radius: 15px; margin: 20px 0;">
-                <h3 style="margin: 0 0 10px 0; font-size: 18px; color: white;">🧠 ¡Felicitaciones!</h3>
-                <p style="margin: 0; font-size: 14px; line-height: 1.4; color: white;">Has completado todos los niveles del Focus Challenge. Tu mente ha sido entrenada para la máxima concentración, atención sostenida y flexibilidad cognitiva.</p>
+            <div style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 25px; border-radius: 15px; margin: 25px 0;">
+                <h3 style="margin: 0 0 15px 0; font-size: 20px; color: white;">🧠 ¡Felicitaciones!</h3>
+                <p style="margin: 0; font-size: 16px; line-height: 1.5; color: white;">Has completado todos los niveles del Focus Challenge. Tu mente ha sido entrenada para la máxima concentración, atención sostenida y flexibilidad cognitiva.</p>
             </div>
             
             <div class="tutor-message">
@@ -1002,12 +1221,11 @@
         </div>
     </div>
 
-    <!-- Modal de fin de juego COMPACTO Y MEJORADO -->
+    <!-- Modal de fin de juego -->
     <div class="modal hidden" id="gameOverModal">
         <div class="modal-content">
             <h2>⏰ Tiempo Agotado</h2>
             
-            <!-- Información del nivel alcanzado -->
             <div class="level-achieved">
                 <h3>🏆 Nivel Alcanzado</h3>
                 <div class="achieved-badge">
@@ -1016,28 +1234,25 @@
                 </div>
             </div>
             
-            <!-- Puntaje total destacado -->
             <div class="final-score-display">
                 <div class="final-score-value" id="finalScore">0</div>
                 <div class="final-score-label">Puntos Totales</div>
             </div>
             
-            <!-- Alerta de reset (solo si está cerca del límite) -->
             <div class="reset-warning hidden" id="resetWarning">
                 <h4>⚠️ ¡Atención!</h4>
                 <p>Intento <span id="currentFailure">1</span> de 3. Si fallas 3 veces, regresarás al Nivel 1.</p>
             </div>
             
-            <!-- Mensaje para el tutor -->
             <div class="tutor-message">
                 <h4>📞 ¡Importante!</h4>
                 <p>Llama a tu tutor para registrar tu puntaje</p>
             </div>
             
-            <p style="margin: 8px 0; font-size: 13px;">¡No te preocupes! Puedes continuar desde este mismo nivel.</p>
-            <p style="margin: 8px 0;"><small>Necesitas <span id="remainingCorrects">0</span> aciertos más para avanzar.</small></p>
+            <p style="margin: 10px 0; font-size: 14px;">¡No te preocupes! Puedes continuar desde este mismo nivel.</p>
+            <p style="margin: 10px 0;"><small>Necesitas <span id="remainingCorrects">0</span> aciertos más para avanzar.</small></p>
             
-            <div class="progress-stats" id="gameOverStats" style="margin: 12px 0;">
+            <div class="progress-stats" id="gameOverStats" style="margin: 15px 0;">
                 <div class="stat-item">
                     <div class="stat-value" id="finalAccuracy">0%</div>
                     <div class="stat-label">Precisión final</div>
@@ -1052,56 +1267,41 @@
         class FocusChallenge {
             constructor() {
                 this.gameState = {
-                    totalScore: 0,        // Puntos acumulados totales
-                    levelPoints: 0,       // Puntos del nivel actual
+                    totalScore: 0,
+                    levelPoints: 0,
                     level: 1,
                     currentNumber: 5,
-                    timeRemaining: 30,    // REDUCIDO: Tiempo más desafiante
-                    totalTime: 30,        // REDUCIDO: Tiempo más desafiante
-                    elementsRemaining: 10,
-                    totalElements: 10,
+                    timeRemaining: 30,
+                    totalTime: 30,
                     correctAnswers: 0,
                     wrongAnswers: 0,
-                    correctsNeeded: 12,   // EQUILIBRIO PERFECTO: 12 puntos por nivel
+                    correctsNeeded: 12,
                     isPlaying: false,
                     categorySwapped: false,
                     elementsSinceSwap: 0,
                     startTime: null,
                     reactionTimes: [],
-                    processingAnswer: false,  // Para evitar cambios durante arrastre
-                    levelFailures: 0,     // NUEVO: Contador de fallos en el nivel actual
-                    maxFailures: 3        // NUEVO: Máximo 3 fallos antes de reset
+                    processingAnswer: false,
+                    levelFailures: 0,
+                    maxFailures: 3,
+                    awaitingStart: false, // NUEVO: Para controlar el estado de "listos"
+                    timerPaused: false    // NUEVO: Para pausar el timer durante cambios
                 };
 
                 this.gameConfig = {
                     swapFrequency: 6,
                     numbersRange: [1, 20],
                     levelThreshold: 8,
-                    timeDecrement: 2    // REDUCIDO: Menos tiempo por nivel para más desafío
+                    timeDecrement: 2
                 };
 
                 this.levelNames = [
-                    "🌟 Explorador",      // Nivel 1
-                    "⚡ Aprendiz",        // Nivel 2  
-                    "🎯 Cazador",         // Nivel 3
-                    "🚀 Aventurero",      // Nivel 4
-                    "⭐ Maestro",         // Nivel 5
-                    "🏆 Campeón",         // Nivel 6
-                    "💎 Experto",         // Nivel 7
-                    "🔥 Leyenda",         // Nivel 8
-                    "👑 Héroe",           // Nivel 9
-                    "🌈 Superestrella"    // Nivel 10
+                    "🌟 Explorador", "⚡ Aprendiz", "🎯 Cazador", "🚀 Aventurero", "⭐ Maestro",
+                    "🏆 Campeón", "💎 Experto", "🔥 Leyenda", "👑 Héroe", "🌈 Superestrella"
                 ];
 
                 this.audioContext = null;
-                this.dragState = {
-                    isDragging: false,
-                    dragElement: null,
-                    startX: 0,
-                    startY: 0,
-                    offsetX: 0,
-                    offsetY: 0
-                };
+                this.isFullscreen = false;
 
                 this.init();
             }
@@ -1109,10 +1309,11 @@
             init() {
                 this.setupAudio();
                 this.setupEventListeners();
+                this.setupKeyboardControls(); // NUEVO
                 this.updateDisplay();
                 this.generateNewNumber();
                 
-                console.log('Focus Challenge initialized successfully');
+                console.log('Focus Challenge Enhanced initialized successfully');
             }
 
             setupAudio() {
@@ -1144,142 +1345,116 @@
 
             setupEventListeners() {
                 // Botones de control
-                document.getElementById('startGameBtn').addEventListener('click', () => this.startGame());
+                document.getElementById('startGameBtn').addEventListener('click', () => this.showReadyModal());
+                document.getElementById('startLevelBtn').addEventListener('click', () => this.startGameFromReady());
                 document.getElementById('hintBtn').addEventListener('click', () => this.showHint());
                 document.getElementById('nextLevelBtn').addEventListener('click', () => this.nextLevel());
                 document.getElementById('retryBtn').addEventListener('click', () => this.continueFromCurrentLevel());
                 document.getElementById('restartGameBtn').addEventListener('click', () => this.restartFullGame());
-
-                // Sistema de arrastre
-                this.setupDragAndDrop();
+                document.getElementById('fullscreenBtn').addEventListener('click', () => this.toggleFullscreen());
 
                 // Prevenir selección de texto
                 document.addEventListener('selectstart', (e) => e.preventDefault());
             }
 
-            restartFullGame() {
-                // Cerrar modal de felicitaciones
-                document.getElementById('gameCompleteModal').classList.add('hidden');
-                
-                // Resetear completamente el juego
-                this.resetGame();
+            // NUEVO: Configurar controles de teclado
+            setupKeyboardControls() {
+                document.addEventListener('keydown', (e) => {
+                    // Manejar Enter para cerrar modal de "listos"
+                    if (e.key === 'Enter' && this.gameState.awaitingStart) {
+                        e.preventDefault();
+                        this.startGameFromReady();
+                        return;
+                    }
+
+                    if (!this.gameState.isPlaying || this.gameState.processingAnswer) return;
+
+                    if (e.key === 'ArrowLeft') {
+                        e.preventDefault();
+                        this.handleKeyPress('left');
+                    } else if (e.key === 'ArrowRight') {
+                        e.preventDefault();
+                        this.handleKeyPress('right');
+                    }
+                });
             }
 
-            setupDragAndDrop() {
-                const numberElement = document.getElementById('currentNumber');
+            // NUEVO: Manejar pulsación de teclas
+            handleKeyPress(direction) {
                 const leftCategory = document.getElementById('leftCategory');
                 const rightCategory = document.getElementById('rightCategory');
-
-                // Mouse events
-                numberElement.addEventListener('mousedown', (e) => this.startDrag(e));
-                document.addEventListener('mousemove', (e) => this.onDrag(e));
-                document.addEventListener('mouseup', (e) => this.endDrag(e));
-
-                // Touch events for mobile
-                numberElement.addEventListener('touchstart', (e) => this.startDrag(e), {passive: false});
-                document.addEventListener('touchmove', (e) => this.onDrag(e), {passive: false});
-                document.addEventListener('touchend', (e) => this.endDrag(e));
-
-                // Drop zones
-                leftCategory.addEventListener('dragover', (e) => this.onDragOver(e));
-                rightCategory.addEventListener('dragover', (e) => this.onDragOver(e));
-                leftCategory.addEventListener('drop', (e) => this.onDrop(e));
-                rightCategory.addEventListener('drop', (e) => this.onDrop(e));
-            }
-
-            startDrag(e) {
-                if (!this.gameState.isPlaying) return;
-
-                this.dragState.isDragging = true;
-                this.dragState.dragElement = e.target;
                 
-                const rect = e.target.getBoundingClientRect();
-                const clientX = e.clientX || (e.touches && e.touches[0].clientX);
-                const clientY = e.clientY || (e.touches && e.touches[0].clientY);
-                
-                this.dragState.offsetX = clientX - rect.left;
-                this.dragState.offsetY = clientY - rect.top;
-                this.dragState.startX = rect.left;
-                this.dragState.startY = rect.top;
-
-                e.target.classList.add('dragging');
-                e.target.style.position = 'fixed';
-                e.target.style.zIndex = '1000';
-                e.target.style.pointerEvents = 'none';
-
-                this.gameState.startTime = Date.now();
-
-                e.preventDefault();
-            }
-
-            onDrag(e) {
-                if (!this.dragState.isDragging) return;
-
-                const clientX = e.clientX || (e.touches && e.touches[0].clientX);
-                const clientY = e.clientY || (e.touches && e.touches[0].clientY);
-
-                // Movimiento súper fluido - sigue exactamente al cursor
-                this.dragState.dragElement.style.left = (clientX - this.dragState.offsetX) + 'px';
-                this.dragState.dragElement.style.top = (clientY - this.dragState.offsetY) + 'px';
-                this.dragState.dragElement.style.transition = 'none'; // Sin transiciones para máxima fluidez
-
-                // Highlight drop zones
-                const elementsBelow = document.elementsFromPoint(clientX, clientY);
-                const categoryZone = elementsBelow.find(el => el.classList.contains('category-zone'));
-                
-                document.querySelectorAll('.category-zone').forEach(zone => {
-                    zone.classList.remove('drag-over');
-                });
-
-                if (categoryZone) {
-                    categoryZone.classList.add('drag-over');
+                // Highlight visual de la categoría seleccionada
+                if (direction === 'left') {
+                    leftCategory.classList.add('active');
+                    setTimeout(() => leftCategory.classList.remove('active'), 200);
+                    this.processAnswer(leftCategory.dataset.category);
+                } else if (direction === 'right') {
+                    rightCategory.classList.add('active');
+                    setTimeout(() => rightCategory.classList.remove('active'), 200);
+                    this.processAnswer(rightCategory.dataset.category);
                 }
 
-                e.preventDefault();
+                // Añadir efecto de pulso al número
+                const numberElement = document.getElementById('currentNumber');
+                numberElement.classList.add('pulse');
+                setTimeout(() => numberElement.classList.remove('pulse'), 600);
             }
 
-            endDrag(e) {
-                if (!this.dragState.isDragging) return;
-
-                const clientX = e.clientX || (e.changedTouches && e.changedTouches[0].clientX);
-                const clientY = e.clientY || (e.changedTouches && e.changedTouches[0].clientY);
-
-                // Find drop zone
-                const elementsBelow = document.elementsFromPoint(clientX, clientY);
-                const categoryZone = elementsBelow.find(el => el.classList.contains('category-zone'));
-
-                // Reset element position
-                this.resetDragElement();
-
-                // Process drop
-                if (categoryZone) {
-                    this.processAnswer(categoryZone.dataset.category);
+            // NUEVO: Alternar pantalla completa
+            toggleFullscreen() {
+                if (!document.fullscreenElement) {
+                    document.documentElement.requestFullscreen().then(() => {
+                        this.isFullscreen = true;
+                        document.body.classList.add('fullscreen');
+                        document.getElementById('fullscreenBtn').textContent = '🔳 Salir Pantalla Completa';
+                    }).catch(err => {
+                        console.log('No se pudo entrar en pantalla completa:', err);
+                    });
                 } else {
-                    this.returnToCenter();
+                    document.exitFullscreen().then(() => {
+                        this.isFullscreen = false;
+                        document.body.classList.remove('fullscreen');
+                        document.getElementById('fullscreenBtn').textContent = '🔲 Pantalla Completa';
+                    }).catch(err => {
+                        console.log('No se pudo salir de pantalla completa:', err);
+                    });
                 }
-
-                // Clean up drag state
-                this.dragState.isDragging = false;
-                this.dragState.dragElement = null;
-
-                document.querySelectorAll('.category-zone').forEach(zone => {
-                    zone.classList.remove('drag-over');
-                });
             }
 
-            resetDragElement() {
-                const element = this.dragState.dragElement;
-                element.classList.remove('dragging');
-                element.style.position = '';
-                element.style.left = '';
-                element.style.top = '';
-                element.style.zIndex = '';
-                element.style.pointerEvents = '';
-                element.style.transition = ''; // Restaurar transiciones normales
+            // NUEVO: Mostrar modal de "listos"
+            showReadyModal() {
+                const welcomeModal = document.getElementById('welcomeModal');
+                if (welcomeModal) welcomeModal.classList.add('hidden');
+
+                const levelName = this.levelNames[this.gameState.level - 1] || `🎯 Nivel ${this.gameState.level}`;
+                
+                document.getElementById('readyLevelInfo').textContent = `Nivel ${this.gameState.level} - ${levelName}`;
+                document.getElementById('readyObjective').textContent = `${this.gameState.correctsNeeded} aciertos para avanzar`;
+                
+                const readyModal = document.getElementById('readyModal');
+                readyModal.classList.remove('hidden');
+                this.gameState.awaitingStart = true;
+            }
+
+            // NUEVO: Iniciar juego desde modal de listos
+            startGameFromReady() {
+                const readyModal = document.getElementById('readyModal');
+                readyModal.classList.add('hidden');
+                
+                this.gameState.awaitingStart = false;
+                this.gameState.isPlaying = true;
+                this.gameState.timerPaused = false; // Asegurar que el timer no esté pausado al iniciar
+                
+                if (this.gameState.correctsNeeded <= 0) {
+                    this.gameState.correctsNeeded = 12;
+                }
+                
+                this.startTimer();
+                this.updateDisplay();
             }
 
             processAnswer(selectedCategory) {
-                // Evitar procesar si ya estamos procesando una respuesta
                 if (this.gameState.processingAnswer) return;
                 this.gameState.processingAnswer = true;
 
@@ -1288,7 +1463,6 @@
                 const correctCategory = isEven ? 'par' : 'impar';
                 const isCorrect = selectedCategory === correctCategory;
 
-                // Calculate reaction time
                 if (this.gameState.startTime) {
                     const reactionTime = (Date.now() - this.gameState.startTime) / 1000;
                     this.gameState.reactionTimes.push(reactionTime);
@@ -1298,52 +1472,42 @@
                     this.gameState.levelPoints++;
                     this.gameState.totalScore++;
                     this.gameState.correctAnswers++;
-                    this.gameState.correctsNeeded--; // ¡Countdown de aciertos!
+                    this.gameState.correctsNeeded--;
                     
                     this.showFeedback('✓ +1', 'success');
-                    this.playSound(523.25); // C5 note
+                    this.playSound(523.25);
                     this.createSparkles();
                     this.highlightCategory(selectedCategory, 'correct');
-                    
-                    // Efectos especiales para el countdown
                     this.updateCountdownDisplay();
-                    
                 } else {
-                    // Solo reducir puntos del nivel actual, no los totales
                     this.gameState.levelPoints = Math.max(0, this.gameState.levelPoints - 1);
                     this.gameState.totalScore = Math.max(0, this.gameState.totalScore - 1);
                     this.gameState.wrongAnswers++;
                     this.showFeedback('✗ -1', 'error');
-                    this.playSound(196.00, 0.3, 'error'); // G3 note
+                    this.playSound(196.00, 0.3, 'error');
                     this.highlightCategory(selectedCategory, 'incorrect');
                 }
 
-                this.gameState.elementsRemaining--;
                 this.gameState.elementsSinceSwap++;
 
-                // Check level completion - ahora basado en countdown
+                // CORRECCIÓN: Solo verificar si se completó el nivel por aciertos
+                // NO terminar por elementos restantes - el juego continúa hasta tiempo agotado
                 if (this.gameState.correctsNeeded <= 0) {
                     setTimeout(() => {
                         this.completeLevel();
                     }, 300);
                     return;
-                } else if (this.gameState.elementsRemaining <= 0) {
-                    setTimeout(() => {
-                        this.gameOver();
-                    }, 300);
-                    return;
                 }
 
-                // ¡CORRECCIÓN CLAVE! - Generar nuevo número DESPUÉS de breve pausa
+                // Generar nuevo número y continuar
                 setTimeout(() => {
                     this.generateNewNumber();
                     this.updateDisplay();
-                    this.gameState.processingAnswer = false; // Liberar flag DESPUÉS de generar número
+                    this.gameState.processingAnswer = false;
                 }, 150);
 
                 // Check for category swap
-                if (this.gameState.elementsSinceSwap >= this.gameConfig.swapFrequency && 
-                    this.gameState.elementsRemaining > 0) {
+                if (this.gameState.elementsSinceSwap >= this.gameConfig.swapFrequency) {
                     setTimeout(() => this.swapCategories(), 500);
                 }
             }
@@ -1382,15 +1546,19 @@
                 }
             }
 
+            // MEJORADO: Intercambio de categorías con notificación y pausa del timer
             swapCategories() {
                 const leftCategory = document.getElementById('leftCategory');
                 const rightCategory = document.getElementById('rightCategory');
                 
-                // Add swap animation
+                // PAUSAR EL TIMER durante el cambio
+                this.gameState.timerPaused = true;
+                
+                // Añadir animación de intercambio
                 leftCategory.classList.add('swapping');
                 rightCategory.classList.add('swapping');
                 
-                // Swap data attributes and text
+                // Intercambiar datos y texto
                 const leftCategory_data = leftCategory.dataset.category;
                 const leftText = leftCategory.firstElementChild.textContent;
                 
@@ -1400,19 +1568,36 @@
                 rightCategory.dataset.category = leftCategory_data;
                 rightCategory.firstElementChild.textContent = leftText;
                 
+                // MOSTRAR NOTIFICACIÓN DE CAMBIO
+                this.showChangeNotification();
+                
                 this.gameState.elementsSinceSwap = 0;
-                this.playSound(440, 0.3); // A4 note for swap
+                this.playSound(440, 0.3);
                 
                 setTimeout(() => {
                     leftCategory.classList.remove('swapping');
                     rightCategory.classList.remove('swapping');
                 }, 1000);
+                
+                // REANUDAR EL TIMER después de la notificación (2 segundos)
+                setTimeout(() => {
+                    this.gameState.timerPaused = false;
+                }, 2000);
+            }
+
+            // NUEVO: Mostrar notificación de cambio
+            showChangeNotification() {
+                const notification = document.getElementById('changeNotification');
+                notification.classList.add('show');
+                
+                setTimeout(() => {
+                    notification.classList.remove('show');
+                }, 2000);
             }
 
             generateNewNumber() {
                 const [min, max] = this.gameConfig.numbersRange;
                 let newNumber;
-                // Asegurar que el nuevo número sea diferente al actual
                 do {
                     newNumber = Math.floor(Math.random() * (max - min + 1)) + min;
                 } while (newNumber === this.gameState.currentNumber && (max - min) > 1);
@@ -1421,31 +1606,23 @@
                 document.getElementById('currentNumber').textContent = this.gameState.currentNumber;
             }
 
-            startGame() {
-                const welcomeModal = document.getElementById('welcomeModal');
-                if (welcomeModal) welcomeModal.classList.add('hidden');
-                
-                this.gameState.isPlaying = true;
-                
-                // Asegurar que correctsNeeded esté correctamente inicializado - EQUILIBRIO PERFECTO: 12 puntos
-                if (this.gameState.correctsNeeded <= 0) {
-                    this.gameState.correctsNeeded = 12;
-                }
-                
-                this.startTimer();
-                this.updateDisplay();
-            }
-
             startTimer() {
-                clearInterval(this.timerInterval); // Limpiar cualquier timer previo
+                clearInterval(this.timerInterval);
                 
                 this.timerInterval = setInterval(() => {
-                    this.gameState.timeRemaining--;
-                    this.updateTimerDisplay();
-                    
-                    if (this.gameState.timeRemaining <= 0) {
-                        clearInterval(this.timerInterval);
-                        this.gameOver();
+                    // Solo reducir tiempo si no está pausado
+                    if (!this.gameState.timerPaused) {
+                        this.gameState.timeRemaining--;
+                        this.updateTimerDisplay();
+                        
+                        // Verificar si el tiempo se agotó realmente
+                        if (this.gameState.timeRemaining <= 0) {
+                            clearInterval(this.timerInterval);
+                            this.gameOver();
+                        }
+                    } else {
+                        // Si está pausado, solo actualizar la display sin reducir tiempo
+                        this.updateTimerDisplay();
                     }
                 }, 1000);
             }
@@ -1458,7 +1635,6 @@
                 progressBar.style.width = progress + '%';
                 timerText.textContent = this.gameState.timeRemaining + 's';
                 
-                // Change color based on time remaining
                 if (progress > 50) {
                     progressBar.style.background = 'linear-gradient(90deg, #fff, #f0f0f0)';
                 } else if (progress > 25) {
@@ -1474,36 +1650,33 @@
                 const hintText = isEven ? 'Este número es PAR (divisible por 2)' : 'Este número es IMPAR (no divisible por 2)';
                 
                 this.showFeedback(`💡 ${hintText}`, 'hint');
-                this.playSound(329.63, 0.2); // E4 note for hint
+                this.playSound(329.63, 0.2);
             }
 
             completeLevel() {
-                clearInterval(this.timerInterval);
+                clearInterval(this.timerInterval); // Asegurar que el timer se detenga completamente
                 this.gameState.isPlaying = false;
+                this.gameState.timerPaused = false; // Resetear pausa al completar nivel
                 
                 const accuracy = (this.gameState.correctAnswers / (this.gameState.correctAnswers + this.gameState.wrongAnswers)) * 100;
                 const avgReactionTime = this.gameState.reactionTimes.reduce((a, b) => a + b, 0) / this.gameState.reactionTimes.length;
                 
-                // ¡VERIFICAR SI COMPLETÓ EL NIVEL 10!
                 if (this.gameState.level === 10) {
                     this.showGameComplete(accuracy);
                     return;
                 }
                 
-                // Si no es el nivel 10, mostrar modal normal de nivel completado
                 this.showLevelComplete(accuracy, avgReactionTime);
             }
 
             showGameComplete(finalAccuracy) {
-                // Calcular bonus por precisión perfecta
                 let bonusPoints = 0;
                 if (finalAccuracy === 100 && this.gameState.correctAnswers > 0) {
-                    bonusPoints = Math.round(this.gameState.correctAnswers * 0.5); // 50% bonus
+                    bonusPoints = Math.round(this.gameState.correctAnswers * 0.5);
                     this.gameState.levelPoints += bonusPoints;
                     this.gameState.totalScore += bonusPoints;
                 }
                 
-                // Actualizar información en el modal de felicitaciones finales
                 const finalGameScore = document.getElementById('finalGameScore');
                 const finalScoreForTutor = document.getElementById('finalScoreForTutor');
                 const finalGameAccuracy = document.getElementById('finalGameAccuracy');
@@ -1514,29 +1687,22 @@
                 if (finalGameAccuracy) finalGameAccuracy.textContent = Math.round(finalAccuracy) + '%';
                 if (totalGameCorrects) totalGameCorrects.textContent = this.gameState.correctAnswers;
                 
-                // Mostrar modal de juego completado
                 const modal = document.getElementById('gameCompleteModal');
                 if (modal) {
                     modal.classList.remove('hidden');
-                } else {
-                    console.error('Game Complete modal not found!');
                 }
                 
-                // Sonido especial de victoria total
-                this.playSound(659.25, 1.0); // E5 note largo para celebración
-                
-                // Efectos especiales de celebración
-                setTimeout(() => this.playSound(783.99, 0.5), 300); // G5
-                setTimeout(() => this.playSound(880.00, 0.5), 600); // A5
-                setTimeout(() => this.playSound(1046.50, 1.0), 900); // C6 - Final triunfal
+                this.playSound(659.25, 1.0);
+                setTimeout(() => this.playSound(783.99, 0.5), 300);
+                setTimeout(() => this.playSound(880.00, 0.5), 600);
+                setTimeout(() => this.playSound(1046.50, 1.0), 900);
             }
 
             showLevelComplete(accuracy, avgReactionTime) {
-                // Calcular bonus por precisión perfecta
                 let bonusPoints = 0;
                 let bonusText = "";
                 if (accuracy === 100 && this.gameState.correctAnswers > 0) {
-                    bonusPoints = Math.round(this.gameState.correctAnswers * 0.5); // 50% bonus
+                    bonusPoints = Math.round(this.gameState.correctAnswers * 0.5);
                     this.gameState.levelPoints += bonusPoints;
                     this.gameState.totalScore += bonusPoints;
                     bonusText = `🌟 ¡Precisión Perfecta! +${bonusPoints} puntos bonus`;
@@ -1545,7 +1711,6 @@
                 const currentLevelName = this.levelNames[this.gameState.level - 1] || `🎯 Nivel ${this.gameState.level}`;
                 const nextLevelName = this.levelNames[this.gameState.level] || `🎯 Nivel ${this.gameState.level + 1}`;
                 
-                // Información del nivel completado
                 const completedLevelNumber = document.getElementById('completedLevelNumber');
                 const completedLevelName = document.getElementById('completedLevelName');
                 const nextLevelNumber = document.getElementById('nextLevelNumber');
@@ -1565,7 +1730,6 @@
                 if (avgTime) avgTime.textContent = avgReactionTime.toFixed(1) + 's';
                 if (totalCorrect) totalCorrect.textContent = this.gameState.correctAnswers;
                 
-                // Mostrar información del bonus
                 if (levelBonusInfo) {
                     levelBonusInfo.textContent = bonusText;
                     if (accuracy === 100) {
@@ -1578,22 +1742,17 @@
                 const modal = document.getElementById('levelCompleteModal');
                 if (modal) {
                     modal.classList.remove('hidden');
-                } else {
-                    console.error('Level Complete modal not found!');
                 }
                 
-                this.playSound(523.25, 0.5); // Success sound
+                this.playSound(523.25, 0.5);
             }
 
             nextLevel() {
                 document.getElementById('levelCompleteModal').classList.add('hidden');
                 
                 this.gameState.level++;
-                this.gameState.levelPoints = 0; // Resetear puntos del nivel
-                this.gameState.levelFailures = 0; // Resetear fallos al avanzar de nivel
-                this.gameState.elementsRemaining = Math.min(30, 10 + this.gameState.level * 2);
-                this.gameState.totalElements = this.gameState.elementsRemaining;
-                // TIEMPO MÁS DESAFIANTE: Mínimo 15 segundos
+                this.gameState.levelPoints = 0;
+                this.gameState.levelFailures = 0;
                 this.gameState.timeRemaining = Math.max(15, 30 - (this.gameState.level - 1) * this.gameConfig.timeDecrement);
                 this.gameState.totalTime = this.gameState.timeRemaining;
                 this.gameState.correctAnswers = 0;
@@ -1601,41 +1760,35 @@
                 this.gameState.elementsSinceSwap = 0;
                 this.gameState.reactionTimes = [];
                 this.gameState.processingAnswer = false;
-                
-                // Recalcular correctsNeeded para el nuevo nivel - EQUILIBRIO PERFECTO: 12 puntos
+                this.gameState.timerPaused = false; // NUEVO: Resetear pausa
                 this.gameState.correctsNeeded = 12;
                 
-                // Increase number range for higher levels
                 if (this.gameState.level > 5) {
                     this.gameConfig.numbersRange[1] = Math.min(100, 20 + (this.gameState.level - 5) * 10);
                 }
                 
                 this.generateNewNumber();
-                this.startGame();
+                // Mostrar modal de "listos" para el siguiente nivel
+                this.showReadyModal();
             }
 
             gameOver() {
-                clearInterval(this.timerInterval);
+                clearInterval(this.timerInterval); // Asegurar que el timer se detenga completamente
                 this.gameState.isPlaying = false;
-                
-                // Incrementar contador de fallos en el nivel actual
+                this.gameState.timerPaused = false; // Resetear pausa al terminar
                 this.gameState.levelFailures++;
                 
                 const finalAccuracy = this.gameState.correctAnswers > 0 ? 
                     (this.gameState.correctAnswers / (this.gameState.correctAnswers + this.gameState.wrongAnswers)) * 100 : 0;
                 
                 const currentLevelName = this.levelNames[this.gameState.level - 1] || `🎯 Nivel ${this.gameState.level}`;
-                
-                // Verificar si debe resetear al nivel 1
                 const shouldReset = this.gameState.levelFailures >= this.gameState.maxFailures;
                 
                 if (shouldReset) {
-                    // Mostrar mensaje especial de reset
                     this.showResetModal();
                     return;
                 }
                 
-                // Actualizar información en el modal de Game Over
                 const achievedLevelNumber = document.getElementById('achievedLevelNumber');
                 const achievedLevelName = document.getElementById('achievedLevelName');
                 const finalScore = document.getElementById('finalScore');
@@ -1650,7 +1803,6 @@
                 if (finalAccuracyEl) finalAccuracyEl.textContent = Math.round(finalAccuracy) + '%';
                 if (remainingCorrects) remainingCorrects.textContent = this.gameState.correctsNeeded;
                 
-                // Mostrar alerta de reset si está cerca del límite
                 if (this.gameState.levelFailures >= 1 && resetWarning) {
                     resetWarning.classList.remove('hidden');
                     if (currentFailure) currentFailure.textContent = this.gameState.levelFailures;
@@ -1658,58 +1810,46 @@
                     resetWarning.classList.add('hidden');
                 }
                 
-                // Mostrar modal de game over
                 const modal = document.getElementById('gameOverModal');
                 if (modal) {
                     modal.classList.remove('hidden');
-                } else {
-                    console.error('Game Over modal not found!');
                 }
                 
-                this.playSound(196.00, 1, 'error'); // Game over sound
+                this.playSound(196.00, 1, 'error');
             }
 
             showResetModal() {
-                // Crear modal temporal para mostrar reset
                 alert(`🔄 ¡RESET AL NIVEL 1!\n\nHas fallado 3 veces en el Nivel ${this.gameState.level}.\nRegresando al Nivel 1 para empezar de nuevo.\n\nPuntos totales conservados: ${this.gameState.totalScore}`);
                 
-                // Resetear al nivel 1 manteniendo puntos totales
                 const savedTotalScore = this.gameState.totalScore;
                 this.resetToLevel1();
-                this.gameState.totalScore = savedTotalScore; // Conservar puntos totales
+                this.gameState.totalScore = savedTotalScore;
                 this.updateDisplay();
                 
-                // Iniciar automáticamente
-                this.startGame();
+                this.showReadyModal();
             }
 
             resetToLevel1() {
-                // Resetear al nivel 1 pero conservando algunos datos
                 const savedTotalScore = this.gameState.totalScore;
                 
                 this.gameState.level = 1;
                 this.gameState.levelPoints = 0;
-                this.gameState.levelFailures = 0; // Resetear contador de fallos
-                this.gameState.elementsRemaining = 10;
-                this.gameState.totalElements = 10;
+                this.gameState.levelFailures = 0;
                 this.gameState.timeRemaining = 30;
                 this.gameState.totalTime = 30;
                 this.gameState.correctAnswers = 0;
                 this.gameState.wrongAnswers = 0;
-                this.gameState.correctsNeeded = 13; // MÁXIMO DESAFÍO: 13 puntos por nivel
+                this.gameState.correctsNeeded = 12;
                 this.gameState.isPlaying = false;
                 this.gameState.categorySwapped = false;
                 this.gameState.elementsSinceSwap = 0;
                 this.gameState.reactionTimes = [];
                 this.gameState.processingAnswer = false;
-                
-                // Restaurar puntos totales
+                this.gameState.timerPaused = false; // NUEVO: Resetear pausa
                 this.gameState.totalScore = savedTotalScore;
                 
-                // Resetear rango de números
                 this.gameConfig.numbersRange = [1, 20];
                 
-                // Restaurar categorías a posición inicial
                 const leftCategory = document.getElementById('leftCategory');
                 const rightCategory = document.getElementById('rightCategory');
                 if (leftCategory && rightCategory) {
@@ -1725,27 +1865,66 @@
             continueFromCurrentLevel() {
                 document.getElementById('gameOverModal').classList.add('hidden');
                 
-                // Reiniciar solo las variables de la sesión actual, manteniendo nivel, puntajes totales Y fallos
-                this.gameState.levelPoints = 0; // Resetear puntos del nivel
-                this.gameState.elementsRemaining = Math.min(30, 10 + this.gameState.level * 2);
-                this.gameState.totalElements = this.gameState.elementsRemaining;
-                // TIEMPO MÁS DESAFIANTE: Mínimo 15 segundos
+                this.gameState.levelPoints = 0;
                 this.gameState.timeRemaining = Math.max(15, 30 - (this.gameState.level - 1) * this.gameConfig.timeDecrement);
                 this.gameState.totalTime = this.gameState.timeRemaining;
                 this.gameState.correctAnswers = 0;
                 this.gameState.wrongAnswers = 0;
                 this.gameState.elementsSinceSwap = 0;
                 this.gameState.reactionTimes = [];
-                this.gameState.isPlaying = true;
                 this.gameState.processingAnswer = false;
-                
-                // MANTENER correctsNeeded en 12 puntos - EQUILIBRIO PERFECTO
+                this.gameState.timerPaused = false; // NUEVO: Resetear pausa
                 this.gameState.correctsNeeded = 12;
-                // NO resetear levelFailures - mantener el contador para el sistema de 3 fallos
                 
                 this.generateNewNumber();
-                this.startTimer();
+                this.showReadyModal();
+            }
+
+            restartFullGame() {
+                document.getElementById('gameCompleteModal').classList.add('hidden');
+                this.resetGame();
+            }
+
+            resetGame() {
+                // Reset completo del juego
+                this.gameState = {
+                    totalScore: 0,
+                    levelPoints: 0,
+                    level: 1,
+                    currentNumber: 5,
+                    timeRemaining: 30,
+                    totalTime: 30,
+                    elementsRemaining: 10,
+                    totalElements: 10,
+                    correctAnswers: 0,
+                    wrongAnswers: 0,
+                    correctsNeeded: 12,
+                    isPlaying: false,
+                    categorySwapped: false,
+                    elementsSinceSwap: 0,
+                    startTime: null,
+                    reactionTimes: [],
+                    processingAnswer: false,
+                    levelFailures: 0,
+                    maxFailures: 3,
+                    awaitingStart: false,
+                    timerPaused: false // NUEVO: Resetear pausa
+                };
+
+                this.gameConfig.numbersRange = [1, 20];
+                
+                const leftCategory = document.getElementById('leftCategory');
+                const rightCategory = document.getElementById('rightCategory');
+                if (leftCategory && rightCategory) {
+                    leftCategory.dataset.category = 'par';
+                    leftCategory.firstElementChild.textContent = 'PAR';
+                    rightCategory.dataset.category = 'impar';
+                    rightCategory.firstElementChild.textContent = 'IMPAR';
+                }
+                
+                this.generateNewNumber();
                 this.updateDisplay();
+                this.showReadyModal();
             }
 
             updateCountdownDisplay() {
@@ -1754,23 +1933,20 @@
                 
                 countdownElement.textContent = this.gameState.correctsNeeded;
                 
-                // Remover clases previas
                 countdownContainer.classList.remove('near-goal', 'at-goal');
                 
-                // Efectos visuales basados en progreso
                 if (this.gameState.correctsNeeded <= 0) {
                     countdownContainer.classList.add('at-goal');
-                    this.playSound(659.25, 0.3); // E5 - sonido de logro
+                    this.playSound(659.25, 0.3);
                 } else if (this.gameState.correctsNeeded <= 2) {
                     countdownContainer.classList.add('near-goal');
-                    this.playSound(587.33, 0.2); // D5 - sonido de cercanía
+                    this.playSound(587.33, 0.2);
                 }
             }
 
             updateDisplay() {
                 const levelName = this.levelNames[this.gameState.level - 1] || `🎯 Nivel ${this.gameState.level}`;
                 
-                // Actualizar header mejorado
                 document.getElementById('levelNumber').textContent = this.gameState.level;
                 document.getElementById('levelName').textContent = levelName;
                 document.getElementById('levelPoints').textContent = this.gameState.levelPoints;
@@ -1784,7 +1960,6 @@
                 
                 this.updateTimerDisplay();
                 
-                // Actualizar estilo del countdown
                 const countdownContainer = document.querySelector('.countdown-progress');
                 countdownContainer.classList.remove('near-goal', 'at-goal');
                 
@@ -1794,25 +1969,12 @@
                     countdownContainer.classList.add('near-goal');
                 }
             }
-
-            returnToCenter() {
-                // Animation to return element to center if dropped outside zones
-                const element = document.getElementById('currentNumber');
-                element.style.transition = 'transform 0.3s ease';
-                element.style.transform = 'scale(1.1)';
-                
-                setTimeout(() => {
-                    element.style.transform = '';
-                    element.style.transition = '';
-                }, 300);
-            }
         }
 
-        // Initialize game when page loads
+        // Inicializar juego cuando la página carga
         document.addEventListener('DOMContentLoaded', () => {
-            // Verificar que todos los elementos existan antes de inicializar
             const requiredElements = [
-                'gameOverModal', 'levelCompleteModal', 'gameCompleteModal', 'welcomeModal',
+                'gameOverModal', 'levelCompleteModal', 'gameCompleteModal', 'welcomeModal', 'readyModal',
                 'currentNumber', 'levelNumber', 'levelName', 'levelPoints', 'totalScore', 'correctsNeeded', 'hintBtn'
             ];
             
@@ -1826,14 +1988,26 @@
             
             if (allElementsExist) {
                 new FocusChallenge();
-                console.log('🎮 Focus Challenge loaded successfully!');
+                console.log('🎮 Focus Challenge Enhanced loaded successfully!');
             } else {
                 console.error('❌ Cannot initialize game - missing required elements');
             }
         });
 
-        // Prevent context menu on mobile
+        // Prevenir menú contextual en móviles
         document.addEventListener('contextmenu', (e) => e.preventDefault());
+
+        // Manejar cambios en fullscreen
+        document.addEventListener('fullscreenchange', () => {
+            const fullscreenBtn = document.getElementById('fullscreenBtn');
+            if (document.fullscreenElement) {
+                document.body.classList.add('fullscreen');
+                fullscreenBtn.textContent = '🔳 Salir Pantalla Completa';
+            } else {
+                document.body.classList.remove('fullscreen');
+                fullscreenBtn.textContent = '🔲 Pantalla Completa';
+            }
+        });
     </script>
 </body>
 </html>
